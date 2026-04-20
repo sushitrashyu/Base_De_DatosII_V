@@ -142,7 +142,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   cursor:pointer;font-family:'DM Sans',sans-serif;transition:.2s;box-shadow:0 6px 20px rgba(255,102,0,0.3);}
 .btn-admin-add:hover{transform:translateY(-1px);}
 
-.semanas-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px;}
+.semanas-grid{display:flex;flex-direction:column;gap:28px;}
+.semana-section{display:flex;flex-direction:column;gap:12px;}
+.semana-section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;}
+.semana-cards-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;}
 .semana-card{background:var(--card);border:1px solid rgba(255,102,0,0.15);border-radius:var(--r);
   padding:22px;position:relative;overflow:hidden;transition:all .25s;}
 .semana-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;
@@ -176,24 +179,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .btn-subir-s:hover{background:rgba(255,102,0,0.15);}
 .loading-state{text-align:center;padding:60px 0;color:var(--muted);font-size:14px;}
 
-/* ── DOC VIEWER MODAL ── */
-.doc-modal{background:#060e1f;border:1px solid var(--border);border-radius:var(--r2);
-  width:96%;max-width:900px;height:88vh;display:flex;flex-direction:column;position:relative;}
-.doc-modal-bar{background:#0d1829;border-bottom:1px solid var(--border);padding:14px 20px;
-  display:flex;align-items:center;justify-content:space-between;border-radius:var(--r2) var(--r2) 0 0;flex-shrink:0;}
-.doc-modal-title{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--text);
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:60%;}
-.doc-modal-actions{display:flex;align-items:center;gap:8px;}
-.doc-btn-dl{display:flex;align-items:center;gap:6px;background:var(--teal);color:#000;
-  padding:7px 16px;border-radius:50px;font-size:12px;font-weight:700;text-decoration:none;
-  border:none;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;}
-.doc-btn-dl:hover{opacity:.9;}
-.doc-close{background:rgba(255,255,255,0.08);border:none;color:var(--text);
-  width:30px;height:30px;border-radius:50%;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
-.doc-close:hover{background:rgba(255,255,255,0.15);}
-.doc-frame{flex:1;width:100%;border:none;border-radius:0 0 var(--r2) var(--r2);background:#1a1a2e;}
-.doc-fallback{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:40px;}
-.doc-fallback p{color:var(--muted);font-size:14px;text-align:center;}
+
 
 /* ── UPLOAD MODAL ── */
 .upload-modal{background:#0d1829;border:1px solid rgba(255,102,0,0.2);border-radius:var(--r2);
@@ -452,26 +438,14 @@ footer p{font-size:13px;color:var(--muted);line-height:1.8;}
   </div>
 </div>
 
-<!-- ══ OVERLAY: DOC VIEWER ══ -->
-<div class="overlay" id="overlay-doc" onclick="overlayClose('overlay-doc',event)">
-  <div class="doc-modal">
-    <div class="doc-modal-bar">
-      <div class="doc-modal-title" id="doc-title">Documento</div>
-      <div class="doc-modal-actions">
-        <a class="doc-btn-dl" id="doc-dl-btn" href="#" download target="_blank">⬇️ Descargar</a>
-        <button class="doc-close" onclick="closeOverlay('overlay-doc')">✕</button>
-      </div>
-    </div>
-    <iframe class="doc-frame" id="doc-frame" src="" allowfullscreen></iframe>
-  </div>
-</div>
+
 
 <!-- ══ OVERLAY: UPLOAD ══ -->
 <div class="overlay" id="overlay-upload" onclick="overlayClose('overlay-upload',event)">
   <div class="upload-modal">
     <div class="modal-nav">
       <div>
-        <div class="modal-nav-title">☁️ Subir Trabajo</div>
+        <div class="modal-nav-title">💾 Guardar Trabajo</div>
         <div class="modal-nav-sub">Base de Datos II · Lenin Yura Justo</div>
       </div>
       <button class="modal-close" onclick="closeOverlay('overlay-upload')">✕</button>
@@ -502,15 +476,18 @@ footer p{font-size:13px;color:var(--muted);line-height:1.8;}
         <input class="finput" id="up-titulo" type="text" placeholder="Ej: Diagrama ER — Sistema de Ventas"></div>
       <div class="frow"><label>Descripción (opcional)</label>
         <textarea class="finput" id="up-desc" rows="2" placeholder="Describe brevemente el trabajo..."></textarea></div>
+      <!-- Drop Zone -->
       <div class="drop-zone" id="drop-zone"
            onclick="document.getElementById('file-input').click()"
            ondragover="dzDragOver(event)" ondragleave="dzDragLeave()" ondrop="dzDrop(event)">
         <div class="drop-icon">☁️</div>
-        <div class="drop-title">Arrastra archivos aquí o haz clic</div>
-        <div class="drop-sub">PDF, DOC, ZIP, SQL — Máx. 10MB</div>
+        <div class="drop-title">Arrastra tu archivo aquí o haz clic</div>
+        <div class="drop-sub">PDF, DOC, DOCX, ZIP, SQL — Máx. 15MB</div>
         <div class="drop-or">— o —</div>
         <button class="drop-pick" onclick="event.stopPropagation();document.getElementById('file-input').click()">Seleccionar archivo</button>
-        <input type="file" id="file-input" style="display:none" accept=".pdf,.doc,.docx,.zip,.sql,.txt,.xlsx,.pptx" onchange="fileSelected(event)">
+        <input type="file" id="file-input" style="display:none"
+               accept=".pdf,.doc,.docx,.zip,.sql,.txt,.xlsx,.pptx"
+               onchange="fileSelected(event)">
       </div>
       <div class="file-prev" id="file-prev">
         <span class="fp-icon" id="fp-icon">📄</span>
@@ -518,10 +495,12 @@ footer p{font-size:13px;color:var(--muted);line-height:1.8;}
         <span class="fp-size" id="fp-size"></span>
         <button class="fp-rm" onclick="removeFile()">✕</button>
       </div>
-      <div class="frow"><label>O pega URL del documento (GitHub Raw, Drive público, etc.)</label>
-        <input class="finput" id="up-url" type="text" placeholder="https://..."></div>
+      <div class="frow">
+        <label>O pega una URL externa (GitHub Raw, Google Drive, etc.)</label>
+        <input class="finput" id="up-url" type="text" placeholder="https://raw.githubusercontent.com/...">
+      </div>
       <div class="progress-bar" id="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
-      <button class="btn-upload" id="btn-upload-main" onclick="doSubir()">☁️ Subir Trabajo</button>
+      <button class="btn-upload" id="btn-upload-main" onclick="doSubir()">💾 Guardar Trabajo</button>
     </div>
   </div>
 </div>
@@ -605,62 +584,56 @@ function cambiarUnidad(u){
 async function renderUnidad(u){
   const g=document.getElementById('semanas-grid');
   g.innerHTML='<div class="loading-state">⏳ Cargando semanas...</div>';
-  const {data,error}=await sb.from('trabajos').select('*').eq('unidad',u).order('semana');
+  const {data,error}=await sb.from('trabajos').select('*').eq('unidad',u).order('semana').order('created_at');
   if(error){g.innerHTML='<div class="loading-state" style="color:#ff7070">Error: '+error.message+'</div>';return;}
-  const m={1:null,2:null,3:null,4:null};
-  (data||[]).forEach(t=>{m[t.semana]=t;});
+
+  // Agrupar trabajos por semana (puede haber múltiples por semana)
+  const porSemana={1:[],2:[],3:[],4:[]};
+  (data||[]).forEach(t=>{if(porSemana[t.semana]) porSemana[t.semana].push(t);});
+
   let html='';
   for(let s=1;s<=4;s++){
-    const t=m[s];
-    let actions='';
-    if(t&&t.url){
-      actions+=`<button class="btn-ver" onclick="verDoc('${escJ(t.url)}','${escJ(t.titulo||'Documento')}')">👁️ Ver</button>`;
-      actions+=`<a class="btn-dl" href="${escJ(t.url)}" download="${escJ(t.titulo||'documento')}" target="_blank">⬇️ Descargar</a>`;
+    const trabajos=porSemana[s];
+    const tiene=trabajos.length>0;
+
+    // Header de semana
+    html+=`<div class="semana-section">
+      <div class="semana-section-header">
+        <div class="semana-chip">📅 Semana ${s}</div>
+        ${isAdmin()?`<button class="btn-subir-s" onclick="openUploadFor(${u},${s})">＋ Agregar trabajo</button>`:''}
+      </div>`;
+
+    html+='<div class="semana-cards-row">';
+    if(!tiene){
+      html+=`<div class="semana-card">
+        <div class="semana-titulo" style="color:var(--muted)">Sin título aún</div>
+        <div class="semana-desc">Aún no hay trabajo subido en esta semana.</div>
+        <div class="semana-actions"><span class="semana-pending">⭕ Pendiente</span></div>
+      </div>`;
+    } else {
+      trabajos.forEach(t=>{
+        html+=`<div class="semana-card has-doc">
+          <div class="semana-titulo">${escH(t.titulo)}</div>
+          <div class="semana-desc">${escH(t.descripcion||'Sin descripción.')}</div>
+          <div class="semana-actions">
+            ${t.url?`<button class="btn-ver" onclick="window.open('${escJ(t.url)}','_blank')">👁️ Ver</button>`:''}
+            ${t.url?`<a class="btn-dl" href="${escJ(t.url)}" target="_blank" download="${escJ(t.titulo||'documento')}">⬇️ Descargar</a>`:''}
+            ${isAdmin()?`<button class="btn-edit" onclick='openEdit(${JSON.stringify(t)})'>✏️</button>`:''}
+            ${isAdmin()?`<button class="btn-del" onclick="delTrabajo('${t.id}')">🗑️</button>`:''}
+          </div>
+        </div>`;
+      });
     }
-    if(!t) actions+='<span class="semana-pending">⭕ Pendiente</span>';
-    if(isAdmin()&&t){
-      actions+=`<button class="btn-edit" onclick='openEdit(${JSON.stringify(t)})'>✏️</button>`;
-      actions+=`<button class="btn-del" onclick="delTrabajo('${t.id}')">🗑️</button>`;
-    }
-    if(isAdmin()&&!t) actions+=`<button class="btn-subir-s" onclick="openUploadFor(${u},${s})">＋ Subir</button>`;
-    html+=`<div class="semana-card ${t?'has-doc':''}">
-      <div class="semana-chip">📅 Semana ${s}</div>
-      <div class="semana-titulo">${t?escH(t.titulo):'Sin título aún'}</div>
-      <div class="semana-desc">${t?escH(t.descripcion||'Sin descripción.'):'Aún no hay trabajo subido.'}</div>
-      <div class="semana-actions">${actions}</div>
-    </div>`;
+    html+='</div>';
+    html+=`</div>`;
   }
   g.innerHTML=html;
 }
 
 // ── VER DOCUMENTO ──
 function verDoc(url, titulo){
-  document.getElementById('doc-title').textContent=titulo;
-  // Boton descargar siempre apunta a la URL original
-  const dlBtn=document.getElementById('doc-dl-btn');
-  dlBtn.href=url;
-  dlBtn.setAttribute('download',titulo);
-  dlBtn.target='_blank';
-
-  const frame=document.getElementById('doc-frame');
-  let embedUrl=url;
-
-  if(url.includes('drive.google.com/file/d/')){
-    // Google Drive -> preview embed
-    const m=url.match(/\/d\/([^/]+)/);
-    if(m) embedUrl='https://drive.google.com/file/d/'+m[1]+'/preview';
-  } else if(url.includes('docs.google.com')){
-    embedUrl=url.replace('/edit','').replace('/pub','')+'?embedded=true';
-  } else if(url.includes('onedrive')||url.includes('1drv.ms')){
-    embedUrl='https://view.officeapps.live.com/op/embed.aspx?src='+encodeURIComponent(url);
-  } else {
-    // GitHub Raw, Supabase, cualquier URL publica -> Google Docs Viewer
-    // Funciona con PDF, docx, xlsx, pptx
-    embedUrl='https://docs.google.com/viewer?url='+encodeURIComponent(url)+'&embedded=true';
-  }
-
-  frame.src=embedUrl;
-  document.getElementById('overlay-doc').classList.add('show');
+  // Abrir documento directamente en nueva pestaña - funciona con cualquier URL
+  window.open(url, '_blank');
 }
 
 // ── UPLOAD ──
@@ -724,31 +697,33 @@ async function doSubir(){
   const editId=document.getElementById('edit-id').value;
   clearMsg('up');
   if(!titulo){showMsg('up','err','El título es obligatorio.');return;}
+
   const btn=document.getElementById('btn-upload-main');
   btn.disabled=true; btn.innerHTML='⏳ Guardando...';
 
-  if(curFile){
-    const pb=document.getElementById('progress-bar');
-    const pf=document.getElementById('progress-fill');
-    if(curFile.size>10*1024*1024){showMsg('up','err','El archivo supera 10MB.');btn.disabled=false;btn.innerHTML='☁️ Subir Trabajo';return;}
-    pb.classList.add('show'); pf.style.width='30%';
-    const fname=Date.now()+'_'+curFile.name.replace(/\s+/g,'_');
-    const path='trabajos/u'+curUnit+'/s'+curSem+'/'+fname;
-    pf.style.width='60%';
-    const {data:ud,error:ue}=await sb.storage.from('portafolio').upload(path,curFile,{upsert:true});
-    if(ue){
-      pb.classList.remove('show');
-      if(!url){showMsg('up','err','No se pudo subir el archivo. Usa una URL externa o configura Supabase Storage.');btn.disabled=false;btn.innerHTML='☁️ Subir Trabajo';return;}
-      showMsg('up','err','Aviso: Storage no disponible. Se usará la URL manual.');
-    } else {
-      pf.style.width='90%';
-      const {data:pub}=sb.storage.from('portafolio').getPublicUrl(path);
-      url=pub.publicUrl;
-      setTimeout(()=>{pf.style.width='100%';setTimeout(()=>pb.classList.remove('show'),400);},200);
+  // Si hay archivo seleccionado, intentar subir a Storage
+  if(curFile && !url){
+    if(curFile.size>15*1024*1024){
+      showMsg('up','err','El archivo supera 15MB.');
+      btn.disabled=false; btn.innerHTML='💾 Guardar Trabajo'; return;
     }
+    const ext=curFile.name.split('.').pop();
+    const fname=Date.now()+'_'+curFile.name.replace(/[^a-zA-Z0-9._-]/g,'_');
+    const path='u'+curUnit+'/s'+curSem+'/'+fname;
+    showMsg('up','ok','⏳ Subiendo archivo...');
+    const {data:upData, error:upErr}=await sb.storage.from('portafolio').upload(path, curFile, {upsert:true, contentType:curFile.type});
+    if(upErr){
+      showMsg('up','err','❌ Error al subir: '+upErr.message+'. Usa una URL externa.');
+      btn.disabled=false; btn.innerHTML='💾 Guardar Trabajo'; return;
+    }
+    const {data:pub}=sb.storage.from('portafolio').getPublicUrl(path);
+    url=pub.publicUrl;
   }
 
-  if(!url){showMsg('up','err','Sube un archivo o pega una URL.');btn.disabled=false;btn.innerHTML='☁️ Subir Trabajo';return;}
+  if(!url){
+    showMsg('up','err','Selecciona un archivo o pega una URL.');
+    btn.disabled=false; btn.innerHTML='💾 Guardar Trabajo'; return;
+  }
 
   let error;
   if(editId){
@@ -756,9 +731,10 @@ async function doSubir(){
   }else{
     ({error}=await sb.from('trabajos').insert({unidad:curUnit,semana:curSem,titulo,descripcion:desc,url,user_id:ses.user.id}));
   }
-  btn.disabled=false; btn.innerHTML='☁️ Subir Trabajo';
+  btn.disabled=false; btn.innerHTML='💾 Guardar Trabajo';
   if(error){showMsg('up','err','Error: '+error.message);return;}
   showMsg('up','ok','✅ Trabajo guardado correctamente.');
+  removeFile();
   setTimeout(()=>{closeOverlay('overlay-upload');renderUnidad(uActual);},900);
 }
 
